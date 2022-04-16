@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.database.Cursor
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 import android.view.LayoutInflater
 import android.view.View
@@ -51,11 +52,11 @@ class AdaptadorRecyclerCompras(var cursor: Cursor) :
                         cursor.moveToFirst()
                         //Ejecuto una nueva query sobre la bbdd para actualizar los datos en el RV
                         cursor = db.writableDatabase.rawQuery(
-                            "SELECT idCriptomoneda,fechaCompra,cantidadtoken,precioCompra,symboloCriptomoneda,portfolio._id FROM portfolio INNER JOIN criptos ON criptos._id =portfolio.idCriptomoneda WHERE idCriptomoneda=$idCripto",
+                            "SELECT idCriptomoneda,fechaCompra,cantidadtoken,precioCompra,symboloCriptomoneda,portfolio._id FROM portfolio,precioActualCriptomoneda INNER JOIN criptos ON criptos._id =portfolio.idCriptomoneda WHERE idCriptomoneda=$idCripto",
                             null
                         )
                         notifyItemRemoved(posicion)
-
+                        VistaPorfolioActivity().rellenarCabezeraPortfolio(idCripto)
 
                     }
                     .setNegativeButton("NO") { DialogInterface, _: Int -> }
@@ -82,9 +83,11 @@ class AdaptadorRecyclerCompras(var cursor: Cursor) :
         holder.inversion.append(cursor.getDouble(3).toString() + " €")
         holder.cantidadToken.append(cursor.getDouble(2).toBigDecimal().toString() + " ")
         holder.cantidadToken.append(cursor.getString(4))
-        holder.valoracionUnitaria.append((cursor.getDouble(2) * cursor.getDouble(5)).toString())
+        holder.valoracionUnitaria.append((cursor.getDouble(2) * cursor.getDouble(6)).toString())
         holder.gananciaUnitaria.append((roi).toString() + "x")
-
+        Log.v("dddd",cursor.getDouble(2).toString())
+        Log.v("dddd",cursor.getDouble(5).toString())
+        Log.v("dddd",cursor.getColumnName(6))
 
     }
 

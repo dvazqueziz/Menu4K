@@ -49,7 +49,7 @@ class VistaPorfolioActivity : AppCompatActivity() {
     //Con esta función relleno el detalle de las compras la primera vez que se crea la Vista
     private fun rellenarDetallePortfolio(idCripto: Int) {
 
-        cursor= db.rawQuery("SELECT idCriptomoneda,fechaCompra,cantidadtoken,precioCompra,symboloCriptomoneda,portfolio._id FROM portfolio INNER JOIN criptos ON criptos._id =portfolio.idCriptomoneda WHERE idCriptomoneda=$idCripto",null)
+        cursor= db.rawQuery("SELECT idCriptomoneda,fechaCompra,cantidadtoken,precioCompra,symboloCriptomoneda,portfolio._id,precioActualCriptomoneda FROM portfolio INNER JOIN criptos ON criptos._id =portfolio.idCriptomoneda WHERE idCriptomoneda=$idCripto",null)
 
         cursor.moveToFirst()
 
