@@ -7,11 +7,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.menu4k.R
 import com.example.menu4k.adapters.AdaptadorDB
 import com.example.menu4k.adapters.AdaptadorRecycleView
 import com.example.menu4k.databinding.FragmentFavoritosBinding
+import com.example.menu4k.databinding.ItemPersonalizadoBinding
 
 
 class FavoritosFragment : Fragment() {
@@ -19,11 +21,8 @@ class FavoritosFragment : Fragment() {
 
     private val binding get()  = _binding!!
     private lateinit var criptoHelper: AdaptadorDB
-    private lateinit var db: SQLiteDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
     }
 
     override fun onCreateView(
@@ -32,6 +31,7 @@ class FavoritosFragment : Fragment() {
     ): View {
         _binding = FragmentFavoritosBinding.inflate(inflater, container, false)
         val view = binding.root
+
         return view
 
     }
@@ -39,14 +39,11 @@ class FavoritosFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         criptoHelper= AdaptadorDB(view.context)
-        db = criptoHelper.readableDatabase
 
-        //Sacamos solo las que estan marcadas como favoritos
-        val cursor: Cursor=db.rawQuery("SELECT * FROM criptos "+
-                "INNER JOIN favoritos"+
-                "    ON criptos._id = favoritos.idCriptomoneda",null)
+        val cursor= criptoHelper.listarFavoritos()
+   
+
         if (cursor.moveToFirst()){
-
             do {
                 val adaptador = AdaptadorRecycleView()
                 adaptador.AdaptadorRecycleView(cursor)
@@ -55,9 +52,11 @@ class FavoritosFragment : Fragment() {
                 binding.recyclerViewFavoritos.adapter = adaptador
             }while (cursor.moveToNext())
 
+        } else{
+
+            Toast.makeText(view.context,"Añade primero Criptos a Favoritos",Toast.LENGTH_SHORT).show()
+
         }
-
-
     }
 
     override fun onDestroyView() {

@@ -17,6 +17,7 @@ class AdaptadorDB (context: Context): SQLiteOpenHelper(context,"datos.db",null,1
         db.execSQL(modeloBaseDatos.crearTablaCripto)
         db.execSQL(modeloBaseDatos.crearTablaFavoritos)
         db.execSQL(modeloBaseDatos.crearTablaPortfolio)
+
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
@@ -147,6 +148,7 @@ class AdaptadorDB (context: Context): SQLiteOpenHelper(context,"datos.db",null,1
 
     fun resumen():Cursor{
         val db= this.readableDatabase
+
         val cursor = db.rawQuery(
             "SELECT criptos.precioActualCriptomoneda,symboloCriptomoneda,SUM(cantidadtoken) " +
                     "FROM criptos INNER JOIN portfolio ON portfolio.idCriptomoneda = criptos._id GROUP BY criptos.precioActualCriptomoneda,symboloCriptomoneda",
@@ -154,5 +156,55 @@ class AdaptadorDB (context: Context): SQLiteOpenHelper(context,"datos.db",null,1
         )
         return cursor
     }
+    fun obtenerTodasLasCriptos():Cursor{
+        val db= this.readableDatabase
+     return db.rawQuery("SELECT * from criptos",null)
+    }
+
+    fun buscarCriptosEnLista(value: String):Cursor{
+        val db= this.readableDatabase
+        return db.rawQuery("SELECT * FROM criptos WHERE LIKE ('%$value%',nombreCriptomoneda)",null)
+
+    }
+
+    fun listarFavoritos(): Cursor{
+        val db= this.readableDatabase
+
+        return db.rawQuery("SELECT * FROM criptos "+
+                "INNER JOIN favoritos"+
+                "    ON criptos._id = favoritos.idCriptomoneda",null)
+    }
+
+    fun listarComprasPorCripto(idCripto: Int): Cursor{
+
+        val db= this.readableDatabase
+        return db.rawQuery(
+            "SELECT idCriptomoneda,fechaCompra,cantidadtoken,precioCompra,symboloCriptomoneda,portfolio._id,precioActualCriptomoneda  FROM portfolio INNER JOIN criptos ON criptos._id =portfolio.idCriptomoneda WHERE idCriptomoneda=$idCripto",
+            null
+        )
+
+    }
+    fun rellenarRecyclerViewPortfolio(): Cursor{
+        val db= this.readableDatabase
+        return db.rawQuery("SELECT distinct idCriptomoneda,nombreCriptomoneda,imagenCriptomoneda,precioActualCriptomoneda FROM " +
+                "criptos INNER JOIN portfolio on portfolio.idCriptomoneda = criptos._id",null)
+
+
+    }
+
+
+    fun rellenarCabeceraCompmraIndividualPortfolio(idCripto: Int): Cursor{
+
+        val db= this.readableDatabase
+        return db.rawQuery("SELECT nombreCriptomoneda,imagenCriptomoneda,precioActualCriptomoneda,symboloCriptomoneda FROM criptos WHERE _id=$idCripto",null)
+    }
+
+    fun rellenarDetalleCompraIndividual(idCripto: Int): Cursor{
+
+        val db= this.readableDatabase
+        return db.rawQuery("SELECT idCriptomoneda,fechaCompra,cantidadtoken,precioCompra,symboloCriptomoneda,portfolio._id,precioActualCriptomoneda FROM portfolio INNER JOIN criptos ON criptos._id =portfolio.idCriptomoneda WHERE idCriptomoneda=$idCripto",null)
+
+    }
+
 
 }
