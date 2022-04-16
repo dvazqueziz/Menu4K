@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/btonMenuResumen"
+        android:icon="@drawable/ic_baseline_currency_bitcoin_24"
+        android:title="Resumen" />
+    <item
+        android:id="@+id/btnMenuBuscar"
+        android:icon="@drawable/ic_baseline_search_24"
+        android:title="Buscar" />
+    <item
+        android:id="@+id/btnMenuFavoritos"
+        android:icon="@drawable/ic_baseline_favorite_24"
+        android:title="Favoritos" />
+    <item
+        android:id="@+id/btonMenuPortfolio"
+        android:icon="@drawable/ic_baseline_timeline_24"
+        android:title="Portfolio" />
+</menu>
