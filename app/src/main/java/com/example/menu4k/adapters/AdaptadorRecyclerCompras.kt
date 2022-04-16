@@ -85,9 +85,7 @@ class AdaptadorRecyclerCompras(var cursor: Cursor) :
         holder.cantidadToken.append(cursor.getString(4))
         holder.valoracionUnitaria.append((cursor.getDouble(2) * cursor.getDouble(6)).toString())
         holder.gananciaUnitaria.append((roi).toString() + "x")
-        Log.v("dddd",cursor.getDouble(2).toString())
-        Log.v("dddd",cursor.getDouble(5).toString())
-        Log.v("dddd",cursor.getColumnName(6))
+
 
     }
 
