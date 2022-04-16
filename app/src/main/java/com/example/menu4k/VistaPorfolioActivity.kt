@@ -34,7 +34,7 @@ class VistaPorfolioActivity : AppCompatActivity() {
     fun rellenarCabezeraPortfolio(idCripto:Int) {
 
 
-        cursor= db.rawQuery("SELECT nombreCriptomoneda,imagenCriptomoneda,precioActualCriptomoneda,symboloCriptomoneda FROM criptos WHERE _id=$idCripto",null)
+        cursor= criptoHelper.rellenarCabeceraCompmraIndividualPortfolio(idCripto)
         cursor.moveToFirst()
         val symbolo= cursor.getString(3)
         binding.textCanitdadTokenPortfolioExt.append(criptoHelper.sumaToken(idCripto).toBigDecimal().toString())
@@ -49,9 +49,8 @@ class VistaPorfolioActivity : AppCompatActivity() {
     //Con esta función relleno el detalle de las compras la primera vez que se crea la Vista
     private fun rellenarDetallePortfolio(idCripto: Int) {
 
-        cursor= db.rawQuery("SELECT idCriptomoneda,fechaCompra,cantidadtoken,precioCompra,symboloCriptomoneda,portfolio._id,precioActualCriptomoneda FROM portfolio INNER JOIN criptos ON criptos._id =portfolio.idCriptomoneda WHERE idCriptomoneda=$idCripto",null)
+        cursor= criptoHelper.rellenarDetalleCompraIndividual(idCripto)
 
-        cursor.moveToFirst()
 
         if (cursor.moveToFirst()){
 

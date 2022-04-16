@@ -22,11 +22,10 @@ class BuscarFragment : Fragment() {
 
     private val binding get() = _binding!!
     private lateinit var criptoHelper: AdaptadorDB
-    private lateinit var db: SQLiteDatabase
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
     }
 
@@ -42,11 +41,8 @@ class BuscarFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         criptoHelper= AdaptadorDB(view.context)
-        db = criptoHelper.readableDatabase
 
-
-        var cursor: Cursor = db.rawQuery("SELECT * FROM criptos",null)
-
+        var cursor: Cursor=criptoHelper.obtenerTodasLasCriptos()
 
         val adaptador = AdaptadorRecycleView()
         adaptador.AdaptadorRecycleView(cursor)
@@ -60,8 +56,8 @@ class BuscarFragment : Fragment() {
                 return false
             }
 
-            override fun onQueryTextChange(p0: String?): Boolean {
-                cursor = db.rawQuery("SELECT * FROM criptos WHERE LIKE ('%$p0%',nombreCriptomoneda)",null)
+            override fun onQueryTextChange(p0: String): Boolean {
+                cursor = criptoHelper.buscarCriptosEnLista(p0)
                 adaptador.AdaptadorRecycleView(cursor)
                 binding.recyclerViewBuscar.layoutManager= LinearLayoutManager(view.context)
                 binding.recyclerViewBuscar.adapter = adaptador

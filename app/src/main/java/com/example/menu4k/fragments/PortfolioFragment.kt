@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.menu4k.MainActivity
 import com.example.menu4k.adapters.AdapadorPortfolio
 import com.example.menu4k.adapters.AdaptadorDB
+import com.example.menu4k.criptoAdaptador
 
 import com.example.menu4k.databinding.FragmentPortfolioBinding
 
@@ -20,7 +21,6 @@ class PortfolioFragment : Fragment() {
 
     private val binding get() = _binding!!
     private lateinit var criptoHelper: AdaptadorDB
-    private lateinit var db: SQLiteDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,18 +37,9 @@ class PortfolioFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         criptoHelper= AdaptadorDB(view.context)
-        db = criptoHelper.readableDatabase
 
-        val cursor: Cursor=db.rawQuery("SELECT distinct idCriptomoneda,nombreCriptomoneda,imagenCriptomoneda,precioActualCriptomoneda FROM " +
-                "criptos INNER JOIN portfolio on portfolio.idCriptomoneda = criptos._id",null)
-
-        rellenarRv(cursor)
-
-    }
-
-     fun rellenarRv(cursor: Cursor) {
+       val cursor= criptoAdaptador.rellenarRecyclerViewPortfolio()
 
         if (cursor.moveToFirst()){
             do {
@@ -60,5 +51,7 @@ class PortfolioFragment : Fragment() {
             }while (cursor.moveToNext())
 
         }
+
     }
+
 }

@@ -22,7 +22,6 @@ import com.example.menu4k.databinding.ItemCompraBinding
 class AdaptadorRecyclerCompras(var cursor: Cursor) :
     RecyclerView.Adapter<AdaptadorRecyclerCompras.ViewHolder>() {
 
-
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         val fechaCompra: TextView
@@ -51,12 +50,8 @@ class AdaptadorRecyclerCompras(var cursor: Cursor) :
                         db.eliminarCompra(cursor.getInt(5))
                         cursor.moveToFirst()
                         //Ejecuto una nueva query sobre la bbdd para actualizar los datos en el RV
-                        cursor = db.writableDatabase.rawQuery(
-                            "SELECT idCriptomoneda,fechaCompra,cantidadtoken,precioCompra,symboloCriptomoneda,portfolio._id FROM portfolio,precioActualCriptomoneda INNER JOIN criptos ON criptos._id =portfolio.idCriptomoneda WHERE idCriptomoneda=$idCripto",
-                            null
-                        )
+                        cursor = db.listarComprasPorCripto(idCripto)
                         notifyItemRemoved(posicion)
-                        VistaPorfolioActivity().rellenarCabezeraPortfolio(idCripto)
 
                     }
                     .setNegativeButton("NO") { DialogInterface, _: Int -> }
@@ -77,8 +72,7 @@ class AdaptadorRecyclerCompras(var cursor: Cursor) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         cursor.moveToPosition(position)
-        val roi =
-            ((cursor.getDouble(2) * cursor.getDouble(5)) - cursor.getDouble(3)) / cursor.getDouble(3)
+        val roi = ((cursor.getDouble(2) * cursor.getDouble(5)) - cursor.getDouble(3)) / cursor.getDouble(3)
         holder.fechaCompra.append(cursor.getString(1))
         holder.inversion.append(cursor.getDouble(3).toString() + " €")
         holder.cantidadToken.append(cursor.getDouble(2).toBigDecimal().toString() + " ")
