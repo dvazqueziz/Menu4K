@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.database.Cursor
 import android.database.sqlite.SQLiteOpenHelper
+import android.graphics.Color
 import android.util.Log
 
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import com.example.menu4k.R
 import com.example.menu4k.VistaPorfolioActivity
 
 import com.example.menu4k.databinding.ItemCompraBinding
+import com.google.android.material.card.MaterialCardView
 
 
 class AdaptadorRecyclerCompras(var cursor: Cursor) :
@@ -29,6 +31,7 @@ class AdaptadorRecyclerCompras(var cursor: Cursor) :
         val inversion: TextView
         val valoracionUnitaria: TextView
         val gananciaUnitaria: TextView
+        val cardView3: MaterialCardView
 
         init {
             val binding = ItemCompraBinding.bind(view)
@@ -37,6 +40,7 @@ class AdaptadorRecyclerCompras(var cursor: Cursor) :
             inversion = binding.textInversionC
             valoracionUnitaria = binding.textValoracionUnitariaCompra
             gananciaUnitaria = binding.gananciaUnitaria
+            cardView3=binding.cardItemCompra
 
             binding.btnBorrar.setOnClickListener {
                 var posicion = adapterPosition
@@ -72,14 +76,22 @@ class AdaptadorRecyclerCompras(var cursor: Cursor) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         cursor.moveToPosition(position)
-        val roi = ((cursor.getDouble(2) * cursor.getDouble(5)) - cursor.getDouble(3)) / cursor.getDouble(3)
+        val roi = (((cursor.getDouble(2) * cursor.getDouble(6)) - cursor.getDouble(3)) / cursor.getDouble(3))
         holder.fechaCompra.append(cursor.getString(1))
-        holder.inversion.append(cursor.getDouble(3).toString() + " €")
-        holder.cantidadToken.append(cursor.getDouble(2).toBigDecimal().toString() + " ")
+        holder.inversion.append(" "+cursor.getDouble(3).toString() + " €")
+        holder.cantidadToken.append(" "+cursor.getDouble(2).toBigDecimal().toString() + " ")
         holder.cantidadToken.append(cursor.getString(4))
-        holder.valoracionUnitaria.append((cursor.getDouble(2) * cursor.getDouble(6)).toString())
-        holder.gananciaUnitaria.append((roi).toString() + "x")
+        holder.valoracionUnitaria.append(" "+(cursor.getDouble(2) * cursor.getDouble(6)).toString()+" €")
+        holder.gananciaUnitaria.append(String.format(" %.2f",roi))
+        holder.gananciaUnitaria.append(" X")
 
+        if(roi>0.00){
+
+            holder.cardView3.strokeColor= Color.GREEN
+        }else{
+
+            holder.cardView3.strokeColor=Color.RED
+        }
 
     }
 

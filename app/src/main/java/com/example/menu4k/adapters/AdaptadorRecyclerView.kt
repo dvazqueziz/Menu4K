@@ -10,12 +10,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.view.get
 
 import androidx.recyclerview.widget.RecyclerView
 
 import com.example.menu4k.R
 import com.example.menu4k.VistaDetalle
 import com.example.menu4k.databinding.ItemPersonalizadoBinding
+import com.example.menu4k.fragments.FavoritosFragment
+import com.google.android.material.card.MaterialCardView
 import com.squareup.picasso.Picasso
 
 
@@ -38,6 +42,7 @@ class AdaptadorRecycleView (): RecyclerView.Adapter<AdaptadorRecycleView.ViewHol
         val variacion : TextView
         val arribaAbajo: ImageView
         val corazonFavorito: ImageView
+        val card:MaterialCardView
 
         init {
             val  binding = ItemPersonalizadoBinding.bind(view)
@@ -48,6 +53,7 @@ class AdaptadorRecycleView (): RecyclerView.Adapter<AdaptadorRecycleView.ViewHol
             variacion=binding.precioVariacion
             arribaAbajo=binding.imageViewUpDown
             corazonFavorito=binding.btonFavoritoCorazon
+            card=binding.cardItemPersonalizado
             view.setOnClickListener{
               //  val posicion = adapterPosition
                 cursor.moveToPosition(adapterPosition)
@@ -81,6 +87,9 @@ class AdaptadorRecycleView (): RecyclerView.Adapter<AdaptadorRecycleView.ViewHol
 
                     corazonFavorito.setImageResource(R.drawable.ic_baseline_favorite_border_24)
                     criptoHelper.eliminarFavoritos(cursor.getInt(0))
+                    criptoHelper.listarFavoritos()
+
+
 
 
                 }
@@ -122,11 +131,13 @@ class AdaptadorRecycleView (): RecyclerView.Adapter<AdaptadorRecycleView.ViewHol
         if (cursor.getDouble(10)>0){
             holder.textoPrecio.setTextColor(Color.GREEN)
             holder.arribaAbajo.setImageResource(R.drawable.ic_baseline_trending_up_24)
+            holder.card.strokeColor= Color.GREEN
 
         }
         if(cursor.getDouble(10)<0){
             holder.textoPrecio.setTextColor(Color.RED)
             holder.arribaAbajo.setImageResource(R.drawable.ic_baseline_trending_down_24)
+            holder.card.strokeColor= Color.RED
         }
 
     }

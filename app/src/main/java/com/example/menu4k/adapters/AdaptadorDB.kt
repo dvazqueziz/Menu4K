@@ -41,18 +41,14 @@ class AdaptadorDB (context: Context): SQLiteOpenHelper(context,"datos.db",null,1
         datos.put("cambioprecio24hrsporcentaje",cambioPrecioPorcien)
         datos.put("ath",ath)
         datos.put("diferenciaathporcien", diferenciaAthPorcien)
-
         db.insert("criptos",null,datos)
         db.close()
-
     }
 
     fun saberSiHayDatosEnBd():Boolean{
         val db = this.readableDatabase
         val cursor = db.rawQuery("SELECT * FROM criptos", null)
         return cursor.moveToFirst()
-
-
 
     }
 
@@ -126,9 +122,6 @@ class AdaptadorDB (context: Context): SQLiteOpenHelper(context,"datos.db",null,1
         val db :SQLiteDatabase =writableDatabase
 
         db.delete("portfolio", "_id=?", arrayOf("$idCripto"))
-
-
-
     }
 
     fun sumaToken(idCripto: Int): Double{

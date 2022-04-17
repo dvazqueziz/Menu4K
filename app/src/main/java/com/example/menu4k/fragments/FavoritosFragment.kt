@@ -21,6 +21,7 @@ class FavoritosFragment : Fragment() {
 
     private val binding get()  = _binding!!
     private lateinit var criptoHelper: AdaptadorDB
+    val adaptador = AdaptadorRecycleView()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -41,11 +42,11 @@ class FavoritosFragment : Fragment() {
         criptoHelper= AdaptadorDB(view.context)
 
         val cursor= criptoHelper.listarFavoritos()
-   
+
 
         if (cursor.moveToFirst()){
             do {
-                val adaptador = AdaptadorRecycleView()
+               // val adaptador = AdaptadorRecycleView()
                 adaptador.AdaptadorRecycleView(cursor)
 
                 binding.recyclerViewFavoritos.layoutManager= LinearLayoutManager(view.context)

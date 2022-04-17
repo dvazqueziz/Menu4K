@@ -18,6 +18,7 @@ import com.example.menu4k.VistaPorfolioActivity
 import com.example.menu4k.databinding.ItemPersonalizadoBinding
 import com.example.menu4k.databinding.ItemPortfolioBinding
 import com.example.menu4k.db
+import com.google.android.material.card.MaterialCardView
 import com.squareup.picasso.Picasso
 import org.w3c.dom.Text
 
@@ -36,6 +37,7 @@ class AdapadorPortfolio: RecyclerView.Adapter<AdapadorPortfolio.ViewHolder>(){
         val tCantidadInvertida : TextView
         val imagenCripto: ImageView
         val textValoracionTotal: TextView
+        val cardView: MaterialCardView
 
 
         init {
@@ -44,6 +46,7 @@ class AdapadorPortfolio: RecyclerView.Adapter<AdapadorPortfolio.ViewHolder>(){
             tCantidadInvertida= binding.textCantidadInvertida
             imagenCripto=binding.imagenCripto
             textValoracionTotal=binding.textValoracionTotal
+            cardView=binding.cardItemPortfolio
 
             view.setOnClickListener{
                 var posicion = adapterPosition
@@ -74,10 +77,19 @@ class AdapadorPortfolio: RecyclerView.Adapter<AdapadorPortfolio.ViewHolder>(){
 
         val token: Double = criptoHelper.sumaToken(cursor.getInt(0))
         val precioActual : Double = cursor.getDouble(3)
+        val valoracionTotal=token*precioActual
+        val cantidadInvertida= criptoHelper.sumaInversion(cursor.getInt(0))
         holder.textoNombre.text= cursor.getString(1)
-        holder.tCantidadInvertida.text=criptoHelper.sumaInversion(cursor.getInt(0)).toString()
-        holder.textValoracionTotal.text=String.format("%.2f",(token*precioActual))+"€"
+        holder.tCantidadInvertida.text=cantidadInvertida.toString()
+        holder.textValoracionTotal.text=String.format("%.2f",valoracionTotal)+"€"
         Picasso.get().load(cursor.getString(2)).into(holder.imagenCripto)
+        if(valoracionTotal>cantidadInvertida){
+
+            holder.cardView.strokeColor=Color.GREEN
+
+        }else{
+            holder.cardView.strokeColor=Color.RED
+        }
 
     }
 
