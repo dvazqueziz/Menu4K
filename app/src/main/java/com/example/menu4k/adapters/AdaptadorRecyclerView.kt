@@ -30,13 +30,14 @@ class AdaptadorRecycleView (): RecyclerView.Adapter<AdaptadorRecycleView.ViewHol
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
+        val criptoHelper= AdaptadorDB(view.context)
         val textoNombre : TextView
         val textoPrecio: TextView
         val imagenCripto: ImageView
         val simboloCripto: TextView
         val variacion : TextView
         val arribaAbajo: ImageView
+        val corazonFavorito: ImageView
 
         init {
             val  binding = ItemPersonalizadoBinding.bind(view)
@@ -46,9 +47,10 @@ class AdaptadorRecycleView (): RecyclerView.Adapter<AdaptadorRecycleView.ViewHol
             simboloCripto= binding.symboloCripto
             variacion=binding.precioVariacion
             arribaAbajo=binding.imageViewUpDown
+            corazonFavorito=binding.btonFavoritoCorazon
             view.setOnClickListener{
-                var posicion = adapterPosition
-                cursor.moveToPosition(posicion)
+              //  val posicion = adapterPosition
+                cursor.moveToPosition(adapterPosition)
                 val c:Context = view.context
                 val intent = Intent(c, VistaDetalle::class.java)
                 intent.putExtra("nombreCripto",cursor.getString(1))
@@ -67,6 +69,23 @@ class AdaptadorRecycleView (): RecyclerView.Adapter<AdaptadorRecycleView.ViewHol
                 c.startActivity(intent)
 
             }
+            corazonFavorito.setOnClickListener {
+
+                cursor.moveToPosition(adapterPosition)
+                if (!criptoHelper.saberSiHayCriptoEnFavoritos(cursor.getInt(0))){
+                    criptoHelper.anadirAFavoritos(cursor.getInt(0))
+                    corazonFavorito.setImageResource(R.drawable.ic_baseline_favorite_24_full_red)
+
+                }else{
+
+
+                    corazonFavorito.setImageResource(R.drawable.ic_baseline_favorite_border_24)
+                    criptoHelper.eliminarFavoritos(cursor.getInt(0))
+
+
+                }
+
+            }
 
         }
 
@@ -79,8 +98,10 @@ class AdaptadorRecycleView (): RecyclerView.Adapter<AdaptadorRecycleView.ViewHol
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val criptoHelper= AdaptadorDB(holder.itemView.context)
 
         cursor.moveToPosition(position)
+        val idCripto= cursor.getInt(0)
 
         holder.textoNombre.text= cursor.getString(1)
         holder.textoPrecio.text= cursor.getDouble(3).toBigDecimal().toString()
@@ -88,6 +109,16 @@ class AdaptadorRecycleView (): RecyclerView.Adapter<AdaptadorRecycleView.ViewHol
         Picasso.get().load(cursor.getString(4)).into(holder.imagenCripto)
 
         holder.variacion.text= String.format("%.2f",cursor.getDouble(10))+"%"
+
+        if(criptoHelper.saberSiHayCriptoEnFavoritos(idCripto)){
+            holder.corazonFavorito.setImageResource(R.drawable.ic_baseline_favorite_24_full_red)
+
+        }else{
+            holder.corazonFavorito.setImageResource(R.drawable.ic_baseline_favorite_border_24)
+
+        }
+
+
         if (cursor.getDouble(10)>0){
             holder.textoPrecio.setTextColor(Color.GREEN)
             holder.arribaAbajo.setImageResource(R.drawable.ic_baseline_trending_up_24)

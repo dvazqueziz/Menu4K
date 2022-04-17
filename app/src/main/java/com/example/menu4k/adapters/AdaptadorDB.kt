@@ -196,7 +196,6 @@ class AdaptadorDB (context: Context): SQLiteOpenHelper(context,"datos.db",null,1
     fun rellenarCabeceraCompmraIndividualPortfolio(idCripto: Int): Cursor{
 
         val db= this.readableDatabase
-
         return db.rawQuery("SELECT nombreCriptomoneda,imagenCriptomoneda,precioActualCriptomoneda,symboloCriptomoneda FROM criptos WHERE _id=$idCripto",null)
     }
 

@@ -13,6 +13,7 @@ import com.example.menu4k.R
 import com.example.menu4k.adapters.AdaptadorDB
 import com.example.menu4k.adapters.AdaptadorRecycleView
 import com.example.menu4k.databinding.FragmentFavoritosBinding
+import com.example.menu4k.databinding.ItemPersonalizadoBinding
 
 
 class FavoritosFragment : Fragment() {
@@ -20,11 +21,8 @@ class FavoritosFragment : Fragment() {
 
     private val binding get()  = _binding!!
     private lateinit var criptoHelper: AdaptadorDB
-    private lateinit var db: SQLiteDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
     }
 
     override fun onCreateView(
@@ -33,6 +31,7 @@ class FavoritosFragment : Fragment() {
     ): View {
         _binding = FragmentFavoritosBinding.inflate(inflater, container, false)
         val view = binding.root
+
         return view
 
     }
@@ -40,12 +39,15 @@ class FavoritosFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         criptoHelper= AdaptadorDB(view.context)
-        db = criptoHelper.readableDatabase
+
         val cursor= criptoHelper.listarFavoritos()
+   
+
         if (cursor.moveToFirst()){
             do {
                 val adaptador = AdaptadorRecycleView()
                 adaptador.AdaptadorRecycleView(cursor)
+
                 binding.recyclerViewFavoritos.layoutManager= LinearLayoutManager(view.context)
                 binding.recyclerViewFavoritos.adapter = adaptador
             }while (cursor.moveToNext())
